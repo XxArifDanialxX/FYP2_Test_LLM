@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2><i class="fas fa-brain"></i> RIASEC Aptitude Test</h2>
+<p>Rate these activities: 1 (Dislike) to 5 (Enjoy)</p>
+
+<form method="POST">
+    <!-- DYNAMIC LOOP for Questions -->
+    {% for q in questions %}
+    <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <p><strong>{{ loop.index }}.</strong> {{ q.text }} <span style="color:#888; font-size:0.8em;">(Trait: {{ q.trait }})</span></p>
+        
+        <input type="hidden" id="q{{ q.id }}" name="q{{ q.id }}" value="3">
+        
+        <div style="display: flex; gap: 5px;">
+            {% for i in range(1, 6) %}
+            <button type="button" 
+                id="btn_q{{ q.id }}_{{ i }}" 
+                class="select-btn grp_q{{ q.id }} {% if i==3 %}active{% endif %}"
+                onclick="selectOption('q{{ q.id }}', {{ i }}, 'btn_q{{ q.id }}_{{ i }}', 'grp_q{{ q.id }}')">
+                {{ i }}
+            </button>
+            {% endfor %}
+            <span style="margin-left: 10px; align-self: center; color: #666; font-size: 0.9em;">
+                {% if loop.index == 1 %}(1=Hate it ... 5=Love it){% endif %}
+            </span>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div style="text-align: center; margin-top: 30px;">
+        <button type="submit" class="btn btn-student" style="padding: 15px 40px; font-size: 1.2em;">
+            <i class="fas fa-calculator"></i> Calculate Final Results
+        </button>
+    </div>
+</form>
+{% endblock %}

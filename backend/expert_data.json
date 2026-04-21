@@ -1,0 +1,376 @@
+{
+    "criteria": {
+        "previous_semester": {
+            "Computation_and_Complexity": {
+                "ADE": 5,
+                "AI": 10,
+                "DE": 5,
+                "NDC": 5,
+                "SDS": 5
+            },
+            "Computer_Architecture_&_Assembly": {
+                "ADE": 3,
+                "AI": 3,
+                "DE": 3,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Computer_Networking": {
+                "ADE": 5,
+                "AI": 3,
+                "DE": 3,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Cross-Platform_Software_Development": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 5,
+                "NDC": 3,
+                "SDS": 10
+            },
+            "Data_Structures_and_Algorithms": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 10,
+                "SDS": 5
+            },
+            "Database_Programming": {
+                "ADE": 10,
+                "AI": 5,
+                "DE": 5,
+                "NDC": 5,
+                "SDS": 5
+            },
+            "Digital_&_Embedded_Systems": {
+                "ADE": 3,
+                "AI": 3,
+                "DE": 3,
+                "NDC": 10,
+                "SDS": 5
+            },
+            "Discrete_Structures": {
+                "ADE": 5,
+                "AI": 10,
+                "DE": 5,
+                "NDC": 5,
+                "SDS": 5
+            },
+            "Elements_of_Programming": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 5,
+                "SDS": 5
+            },
+            "Enterprise_Network": {
+                "ADE": 3,
+                "AI": 3,
+                "DE": 3,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "ICT_&_Islam": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 5,
+                "NDC": 3,
+                "SDS": 10
+            },
+            "Intelligent_Systems": {
+                "ADE": 5,
+                "AI": 10,
+                "DE": 5,
+                "NDC": 5,
+                "SDS": 5
+            },
+            "Intro_to_Computer_Organization": {
+                "ADE": 3,
+                "AI": 3,
+                "DE": 3,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Object_Oriented_Programming": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 5,
+                "SDS": 5
+            },
+            "Operating_Systems": {
+                "ADE": 5,
+                "AI": 3,
+                "DE": 3,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Software_Engineering": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 3,
+                "SDS": 3
+            },
+            "System_Analysis_&_Design": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 5,
+                "NDC": 3,
+                "SDS": 5
+            },
+            "User_Experience_Design": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 3,
+                "SDS": 3
+            }
+        },
+        "spm_results": {
+            "Additional_Mathematics": {
+                "ADE": 5,
+                "AI": 10,
+                "DE": 5,
+                "NDC": 5,
+                "SDS": 10
+            },
+            "Biology": {
+                "ADE": 3,
+                "AI": 5,
+                "DE": 3,
+                "NDC": 5,
+                "SDS": 3
+            },
+            "Chemistry": {
+                "ADE": 3,
+                "AI": 3,
+                "DE": 3,
+                "NDC": 3,
+                "SDS": 3
+            },
+            "Computer_Science": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Economics": {
+                "ADE": 5,
+                "AI": 3,
+                "DE": 5,
+                "NDC": 3,
+                "SDS": 3
+            },
+            "English": {
+                "ADE": 10,
+                "AI": 5,
+                "DE": 10,
+                "NDC": 5,
+                "SDS": 5
+            },
+            "Mathematics": {
+                "ADE": 5,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Physics": {
+                "ADE": 5,
+                "AI": 5,
+                "DE": 5,
+                "NDC": 10,
+                "SDS": 5
+            }
+        },
+        "technical_skills": {
+            "Algorithm_Design": {
+                "ADE": 5,
+                "AI": 10,
+                "DE": 5,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Cloud_Platforms_(AWS/Azure/GCP)": {
+                "ADE": 5,
+                "AI": 5,
+                "DE": 10,
+                "NDC": 5,
+                "SDS": 10
+            },
+            "Containerization_(Docker/K8s)": {
+                "ADE": 10,
+                "AI": 5,
+                "DE": 10,
+                "NDC": 3,
+                "SDS": 5
+            },
+            "Debugging": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Git_Version_Control": {
+                "ADE": 10,
+                "AI": 5,
+                "DE": 10,
+                "NDC": 3,
+                "SDS": 5
+            },
+            "JavaScript/_Web_Development": {
+                "ADE": 10,
+                "AI": 3,
+                "DE": 3,
+                "NDC": 3,
+                "SDS": 5
+            },
+            "Linux/_Command_Line": {
+                "ADE": 5,
+                "AI": 5,
+                "DE": 10,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Problem_Solving": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 10,
+                "SDS": 10
+            },
+            "Python_Programming": {
+                "ADE": 10,
+                "AI": 10,
+                "DE": 10,
+                "NDC": 3,
+                "SDS": 5
+            },
+            "SQL_&_Database_Management": {
+                "ADE": 10,
+                "AI": 5,
+                "DE": 5,
+                "NDC": 3,
+                "SDS": 10
+            },
+            "Shell_Scripting": {
+                "ADE": 3,
+                "AI": 3,
+                "DE": 10,
+                "NDC": 10,
+                "SDS": 10
+            }
+        }
+    },
+    "mcdm": {
+        "bwm": {
+            "best_criteria": "aptitude_test",
+            "best_vectors": [
+                9.0,
+                4.0,
+                2.0,
+                1.0
+            ],
+            "worst_criteria": "spm_results",
+            "worst_vectors": [
+                1.0,
+                7.0,
+                8.0,
+                9.0
+            ]
+        },
+        "qrof": {
+            "matrix": [
+                [
+                    1.0,
+                    0.14285714285714285,
+                    0.125,
+                    0.1111111111111111
+                ],
+                [
+                    7.0,
+                    1.0,
+                    0.25,
+                    0.16666666666666666
+                ],
+                [
+                    8.0,
+                    4.0,
+                    1.0,
+                    0.5
+                ],
+                [
+                    9.0,
+                    6.0,
+                    2.0,
+                    1.0
+                ]
+            ]
+        },
+        "swara": {
+            "comparative_scores": [
+                0.1,
+                0.3,
+                0.6
+            ],
+            "rank_order": [
+                "aptitude_test",
+                "technical_skills",
+                "previous_semester",
+                "spm_results"
+            ]
+        }
+    },
+    "riasec_weights": {
+        "ADE": {
+            "A": 10,
+            "C": 5,
+            "E": 3,
+            "I": 3,
+            "R": 10,
+            "S": 10
+        },
+        "AI": {
+            "A": 5,
+            "C": 5,
+            "E": 3,
+            "I": 5,
+            "R": 10,
+            "S": 3
+        },
+        "DE": {
+            "A": 5,
+            "C": 5,
+            "E": 5,
+            "I": 3,
+            "R": 5,
+            "S": 5
+        },
+        "NDC": {
+            "A": 5,
+            "C": 10,
+            "E": 5,
+            "I": 5,
+            "R": 10,
+            "S": 3
+        },
+        "SDS": {
+            "A": 10,
+            "C": 10,
+            "E": 3,
+            "I": 10,
+            "R": 10,
+            "S": 3
+        }
+    },
+    "weights_manual": {
+        "aptitude_test": 0.2,
+        "previous_semester": 0.25,
+        "spm_results": 0.25,
+        "technical_skills": 0.3
+    }
+}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h2><i class="fas fa-laptop-code"></i> Technical Skills Assessment</h2>
+<p>Rate your proficiency from 1 (Low) to 10 (High)</p>
+
+<form method="POST">
+    <!-- DYNAMIC LOOP for Skills -->
+    {% for skill in skills %}
+    {% set idx = loop.index %}
+    
+    <div class="card">
+        <label><strong>{{ skill.replace('_', ' ') }}</strong></label>
+        <input type="hidden" id="inp_{{ idx }}" name="{{ skill }}" value="1">
+        
+        <div style="margin-top:10px; display: flex; gap: 5px; flex-wrap: wrap;">
+            {% for i in range(1, 11) %}
+            <button type="button" 
+                id="btn_{{ idx }}_{{ i }}" 
+                class="select-btn grp_{{ idx }} {% if i==1 %}active{% endif %}"
+                onclick="selectOption('inp_{{ idx }}', {{ i }}, 'btn_{{ idx }}_{{ i }}', 'grp_{{ idx }}')">
+                {{ i }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div style="text-align: right; margin-top: 20px;">
+        <button type="submit" class="btn btn-student">Next: RIASEC Test <i class="fas fa-arrow-right"></i></button>
+    </div>
+</form>
+{% endblock %}

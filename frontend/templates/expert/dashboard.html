@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Configuration Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #10002b;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px; /* Wider for the 4-column layout */
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        .header-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .header-section a { color: white; text-decoration: none; }
+        .header-section hr { border: 0; border-top: 1px solid rgba(255,255,255,0.5); margin: 20px 0; }
+
+        /* UPPER DASHBOARD: Big Box Left, 2 Small Boxes Right */
+        .upper-dashboard {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: stretch; /* Ensures height of left matches height of right column */
+        }
+
+        .summary-big-box {
+            flex: 1.5; /* Makes the summary box slightly wider */
+            background: linear-gradient(135deg, #5a189a 0%, #f20089 100%);
+            color: #F3DEBA;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            animation: big-box-glow 4s infinite ease-in-out;
+        }
+
+        @keyframes big-box-glow {
+            0%, 100% { box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0 4px 30px rgba(242, 0, 137, 0.6); } /* Glows pink to match the gradient */
+        }
+
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .small-box {
+            flex: 1; /* Each small box takes 50% height of the column */
+            background: #eddaff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+            border-left: 5px solid;
+        }
+
+        /* LOWER DASHBOARD: 4 Columns */
+        .lower-dashboard {
+            display: flex;
+            gap: 20px;
+        }
+
+        .method-card {
+            flex: 1; /* Ensures all 4 boxes have exactly even width */
+            background: #eddaff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+            border-left: 5px solid;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* --- PULSING LEFT-BORDER GLOW --- */
+
+        /* 1. Setup the cards */
+        .small-box, .method-card {
+            position: relative;
+            border-left: 5px solid transparent !important; /* Hide the default solid border */
+            background: #eddaff;
+        }
+
+        /* 2. Create the "Neon Tube" on the left edge */
+        .small-box::before, .method-card::before {
+            content: '';
+            position: absolute;
+            left: -5px;      /* Sit exactly where the border was */
+            top: 0;
+            bottom: 0;
+            width: 5px;      /* Match border width */
+            background-color: var(--glow-color);
+            border-radius: 5px 0 0 5px;
+            
+            /* Apply the breathing animation */
+            animation: left-border-pulse 3s infinite ease-in-out;
+        }
+
+        /* 3. The Breathing Animation (Only affects the border shadow and brightness) */
+        @keyframes left-border-pulse {
+            0%, 100% {
+                box-shadow: 0 0 5px var(--glow-color);
+                filter: brightness(1);
+            }
+            50% {
+                /* The glow spreads outward to the left */
+                box-shadow: -5px 0 20px var(--glow-color), -2px 0 10px var(--glow-color);
+                filter: brightness(1.8); /* Makes the border look like it's "turning on" */
+            }
+        }
+
+        /* 4. Assign colors to each specific card */
+        .small-box.criteria { --glow-color: #264653; }
+        .small-box.riasec   { --glow-color: #D34E4E; }
+        .method-card.qrof   { --glow-color: #6984A9; }
+        .method-card.bwm    { --glow-color: #2a9d8f; }
+        .method-card.swara  { --glow-color: #f4a261; }
+        .method-card.ltsf   { --glow-color: #ea7af4; }
+
+        /* Optional: Stop the pulse on hover to make it feel solid/stable */
+        .small-box:hover::before, .method-card:hover::before {
+            animation-play-state: paused;
+            filter: brightness(2);
+            box-shadow: -5px 0 15px var(--glow-color);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 5px;
+        }
+        .stat-item { text-align: center; }
+        .stat-item .value { font-size: 7em; font-weight: bold; font-family: 'VT323'; margin-top: 10px;}
+
+        .weights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .weight-box { background: white; padding: 5px; border-radius: 5px; text-align: center; border: 1px solid #ddd; }
+        .weight-label { font-size: 0.7em; color: #666; }
+        .weight-val { font-weight: bold; font-size: 0.9em; }
+
+        h3 { margin-top: 0; display: flex; justify-content: space-between; align-items: center; font-size: 1.1em; }
+        .method-status { font-size: 0.6em; padding: 3px 8px; border-radius: 10px; color: white; text-transform: uppercase; }
+
+        h2 {margin: 0; margin-bottom: 50px; color: #38332c;}
+        h4 {margin: 0;}
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <div class="header-section">
+            <h1><a href="/">🎓 AI Curriculum System</a></h1>
+            <hr>
+            <h2 style="color: #bbd0ff">Expert Configuration Dashboard</h2>
+        </div>
+
+        <!-- UPPER DASHBOARD -->
+        <div class="upper-dashboard">
+            
+            <!-- LEFT: Big Summary Box -->
+            <div class="summary-big-box">
+                <h2 style="color: #dec9e9"> << System Overview >> </System></h2>
+                <hr>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <h4>Active Methods</h4>
+                        <div class="value">4/4</div>
+                        <p>All MCDM engines ready</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>Total Criteria</h4>
+                        {% set spm_len = data['criteria']['spm_results']|length if data['criteria'] and data['criteria']['spm_results'] else 0 %}
+                        {% set prev_len = data['criteria']['previous_semester']|length if data['criteria'] and data['criteria']['previous_semester'] else 0 %}
+                        {% set tech_len = data['criteria']['technical_skills']|length if data['criteria'] and data['criteria']['technical_skills'] else 0 %}
+                        <div class="value">{{ spm_len + prev_len + tech_len }}</div>
+                        <p>Subjects & Skills defined</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>Specialisations</h4>
+                        <div class="value">5</div>
+                        <p>Output recommendations</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Two Small Boxes -->
+            <div class="right-column">
+                
+                <!-- Criteria Management -->
+                <div class="small-box criteria">
+                    <h3><span><i class="fas fa-list-ul"></i> Criteria Management</span></h3>
+                    <p style="font-size: 0.85em; font-family: 'Montserrat';">Define subjects, courses, and skills.</p>
+                    <a href="{{ url_for('expert_criteria') }}" class="btn btn-save" style="background:#264653; font-size: 0.8em; padding: 8px 15px; font-family: 'Montserrat';">Manage</a>
+                </div>
+                
+                <!-- RIASEC Configuration -->
+                <div class="small-box riasec">
+                    <h3><span><i class="fas fa-brain"></i> RIASEC Configuration</span></h3>
+                    <p style="font-size: 0.85em; font-family: 'Montserrat';">Personality trait influence per spec.</p>
+                    <a href="{{ url_for('expert_riasec') }}" class="btn btn-save" style="background:#D34E4E; font-size: 0.8em; padding: 8px 15px; font-family: 'Montserrat';">Configure</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOWER DASHBOARD: 4 MCDM Methods -->
+        <div class="lower-dashboard">
+            
+            <!-- q-ROF-AHP -->
+            <div class="method-card qrof">
+                <h3><span>Q-ROF-AHP</span> <span class="method-status status-configured" style="background:#6984A9">AHP</span></h3>
+                <div class="weights-grid">
+                    <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">SPM</div><div class="weight-val">{{ "%.3f"|format(weights['qrof'][0]) if weights['qrof'] else "0.25" }}</div></div>
+                    <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">University</div><div class="weight-val">{{ "%.3f"|format(weights['qrof'][1]) if weights['qrof'] else "0.25" }}</div></div>
+                    <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">Skills</div><div class="weight-val">{{ "%.3f"|format(weights['qrof'][2]) if weights['qrof'] else "0.25" }}</div></div>
+                    <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">Aptitude</div><div class="weight-val">{{ "%.3f"|format(weights['qrof'][3]) if weights['qrof'] else "0.25" }}</div></div>
+                </div>
+                <a href="{{ url_for('expert_qrof') }}" class="btn btn-save" style="background:#6984A9; width:93%; padding:5px; font-size:0.8em; font-family: 'Montserrat';">Configure</a>
+            </div>
+
+            <!-- BWM -->
+            <div class="method-card bwm">
+                <h3><span>BWM + VIKOR</span> <span class="method-status status-configured" style="background:#2a9d8f">BWM</span></h3>
+                <div class="weights-grid">
+                    <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">SPM</div><div class="weight-val">{{ "%.3f"|format(weights['bwm'][0]) if weights['bwm'] else "0.25" }}</div></div>
+                    <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">University</div><div class="weight-val">{{ "%.3f"|format(weights['bwm'][1]) if weights['bwm'] else "0.25" }}</div></div>
+                    <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">Skills</div><div class="weight-val">{{ "%.3f"|format(weights['bwm'][2]) if weights['bwm'] else "0.25" }}</div></div>
+                    <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">Aptitude</div><div class="weight-val">{{ "%.3f"|format(weights['bwm'][3]) if weights['bwm'] else "0.25" }}</div></div>
+                </div>
+                <a href="{{ url_for('expert_bwm_1') }}" class="btn btn-save" style="background:#2a9d8f; width:93%; padding:5px; font-size:0.8em; font-family: 'Montserrat';">Configure</a>
+            </div>
+
+            <!-- SWARA + MOORA -->
+            <div class="method-card swara">
+                <h3>
+                    <span>SWARA + MOORA</span> 
+                    <span class="method-status status-configured" style="background:#FF9800">SWR</span>
+                </h3>
+                
+                <div class="weights-grid">
+                    <div class="weight-box">
+                        <div class="weight-label" style="font-family: 'Montserrat';">SPM</div>
+                        <div class="weight-val">
+                            {{ "%.3f"|format(weights['swara']['spm_results']) if weights['swara'] and 'spm_results' in weights['swara'] else "0.250" }}
+                        </div>
+                    </div>
+                    <div class="weight-box">
+                        <div class="weight-label" style="font-family: 'Montserrat';">University</div>
+                        <div class="weight-val">
+                            {{ "%.3f"|format(weights['swara']['previous_semester']) if weights['swara'] and 'previous_semester' in weights['swara'] else "0.250" }}
+                        </div>
+                    </div>
+                    <div class="weight-box">
+                        <div class="weight-label" style="font-family: 'Montserrat';">Skills</div>
+                        <div class="weight-val">
+                            {{ "%.3f"|format(weights['swara']['technical_skills']) if weights['swara'] and 'technical_skills' in weights['swara'] else "0.250" }}
+                        </div>
+                    </div>
+                    <div class="weight-box">
+                        <div class="weight-label" style="font-family: 'Montserrat';">Aptitude</div>
+                        <div class="weight-val">
+                            {{ "%.3f"|format(weights['swara']['aptitude_test']) if weights['swara'] and 'aptitude_test' in weights['swara'] else "0.250" }}
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('expert_swara_1') }}" class="btn btn-save" style="background:#FF9800; width:93%; padding:5px; font-size:0.8em; margin-top: 10px; font-family: 'Montserrat';">Configure</a>
+            </div>
+            <!-- CRITIC -->
+            <div class="method-card ltsf">
+                <h3><span>CRITIC + EDAS</span> <span class="method-status status-auto" style="background: #ea7af4">Auto</span></h3>
+                <p style="font-size: 0.75em; margin: 10px 0; font-family: 'Montserrat';">Calculated dynamically based on student variance.</p>
+                <button class="btn btn-secondary" disabled style="width:93%; padding:5px; font-size:0.8em; font-family: 'Montserrat';">Automated</button>
+            </div>
+
+        </div> <!-- End Lower -->
+    </div> <!-- End Dashboard Container -->
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2><i class="fas fa-user"></i> Student Information</h2>
+<form method="POST">
+    <label>Full Name:</label>
+    <input type="text" name="name" required placeholder="Enter your name">
+    
+    <label>Matric No:</label>
+    <input type="text" name="matric" required placeholder="e.g. 123456">
+    
+    <label>Email:</label>
+    <input type="email" name="email" required placeholder="student@example.com">
+    
+    <div style="text-align: right; margin-top: 20px;">
+        <button type="submit" class="btn btn-student">Next: SPM Results <i class="fas fa-arrow-right"></i></button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>q-ROF-AHP Validation</h2>
+<p>Enter Pairwise Comparisons (e.g., 3, 5, 1/3, 1/5)</p>
+<form method="POST">
+    <div style="overflow-x:auto;">
+    <table>
+        <tr>
+            <th>vs</th>
+            {% for label in labels %}<th>{{ label }}</th>{% endfor %}
+        </tr>
+        {% for i in range(4) %}
+        <tr>
+            <th>{{ labels[i] }}</th>
+            {% for j in range(4) %}
+            <td>
+                {% if i == j %}
+                <input type="text" name="cell_{{i}}_{{j}}" value="1" readonly style="background:#eee; text-align:center;">
+                {% else %}
+                <input type="text" name="cell_{{i}}_{{j}}" value="{{ matrix[i][j] }}" style="text-align:center;">
+                {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    <button type="submit" class="btn btn-expert">Save Matrix</button>
+</form>
+{% endblock %}

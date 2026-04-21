@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* Add specific style for the dropdowns */
+    select {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0 20px 0;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background-color: white;
+        font-size: 16px;
+    }
+</style>
+
+<h2><i class="fas fa-book"></i> SPM Results</h2>
+<p>Please select your grade for each subject.</p>
+
+<form method="POST">
+    <!-- DYNAMIC LOOP: Generates dropdowns based on Expert Settings -->
+    {% for sub in subjects %}
+    <div style="margin-bottom: 15px;">
+        <label><strong>{{ sub.replace('_', ' ') }}</strong></label>
+        
+        <select name="{{ sub }}" required>
+            <option value="" disabled selected>Select Grade</option>
+            <option value="A+">A+</option>
+            <option value="A">A</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B">B</option>
+            <option value="C+">C+</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="0">G (Fail) / Not Taken</option>
+        </select>
+    </div>
+    {% endfor %}
+    
+    <div style="text-align: right; margin-top: 20px;">
+        <button type="submit" class="btn btn-student">Next: Previous Sem <i class="fas fa-arrow-right"></i></button>
+    </div>
+</form>
+{% endblock %}

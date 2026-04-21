@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>SWARA Step 2: Comparative Importance</h2>
+<div class="card">
+    <p>Enter <strong>s<sub>j</sub></strong> value (relative importance compared to higher rank).</p>
+</div>
+
+<form method="POST">
+    <div class="card">
+        {% for i in range(4) %}
+            {% set current_key = sorted_keys[i] %}
+            
+            {% if i == 0 %}
+                <div style="padding: 10px; background-color: #d4edda; margin-bottom: 15px;">
+                    <strong>Rank 1:</strong> {{ labels[current_key] }} (Reference)
+                </div>
+            {% else %}
+                {% set prev_key = sorted_keys[i-1] %}
+                <div style="margin-bottom: 20px; padding-left: 20px; border-left: 3px solid #007bff;">
+                    <p><strong>Rank {{ i + 1 }}: {{ labels[current_key] }}</strong></p>
+                    <label>How much less important than <strong>{{ labels[prev_key] }}</strong>?</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span>s<sub>j</sub> = </span>
+                        <input type="number" step="0.01" min="0" name="sj_{{current_key}}" placeholder="0.1" required style="width: 100px;">
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div style="text-align: center;">
+        <button type="submit" class="btn btn-expert">Save SWARA Weights</button>
+    </div>
+</form>
+{% endblock %}

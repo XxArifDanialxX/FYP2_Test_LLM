@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>BWM Step 2: Importance Rating</h2>
+<p>Scale: 1 (Equal) to 9 (Extreme)</p>
+<form method="POST">
+    <div class="card">
+        <h3>Compare BEST ({{ labels[best] }}) to others:</h3>
+        {% for k in keys %}
+        {% if k != best %}
+        <label>How much better is <strong>{{ labels[best] }}</strong> than {{ labels[k] }}?</label>
+        <input type="number" min="1" max="9" name="best_to_{{k}}" value="1" required>
+        {% else %}
+        <input type="hidden" name="best_to_{{k}}" value="1">
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="card">
+        <h3>Compare Others to WORST ({{ labels[worst] }}):</h3>
+        {% for k in keys %}
+        {% if k != worst %}
+        <label>How much better is {{ labels[k] }} than <strong>{{ labels[worst] }}</strong>?</label>
+        <input type="number" min="1" max="9" name="{{k}}_to_worst" value="1" required>
+        {% else %}
+        <input type="hidden" name="{{k}}_to_worst" value="1">
+        {% endif %}
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-expert">Save BWM Data</button>
+</form>
+{% endblock %}

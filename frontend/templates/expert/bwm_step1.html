@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>BWM Step 1: Selection</h2>
+<form method="POST">
+    <div class="card">
+        <label><strong>Select the BEST Criterion:</strong></label>
+        <select name="best">
+            {% for k, v in criteria.items() %}
+            <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <label><strong>Select the WORST Criterion:</strong></label>
+        <select name="worst">
+            {% for k, v in criteria.items() %}
+            <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-expert">Next: Rating</button>
+</form>
+{% endblock %}

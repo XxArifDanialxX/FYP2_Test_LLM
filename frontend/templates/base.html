@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Curriculum Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Universal function for selectable button groups
+        function selectOption(hiddenInputId, value, buttonId, groupClass) {
+            document.getElementById(hiddenInputId).value = value;
+            let buttons = document.querySelectorAll('.' + groupClass);
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(buttonId).classList.add('active');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1><a href="/" style="color:#2c3e50; text-decoration:none;">🎓 AI Curriculum System</a></h1>
+        <hr>
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

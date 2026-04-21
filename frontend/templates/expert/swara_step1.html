@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>SWARA Step 1: Ranking</h2>
+<div class="card">
+    <p>Rank the criteria from <strong>1 (Most Important)</strong> to <strong>4 (Least Important)</strong>.</p>
+</div>
+<form method="POST">
+    <div class="card">
+        <table>
+            <tr><th>Criteria</th><th>Rank (1-4)</th></tr>
+            {% for k, label in criteria.items() %}
+            <tr>
+                <td style="text-align: left;">{{ label }}</td>
+                <td><input type="number" min="1" max="4" name="rank_{{k}}" required style="width: 60px; text-align: center;"></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div style="text-align: center;">
+        <button type="submit" class="btn btn-expert">Next: Comparative Importance</button>
+    </div>
+</form>
+{% endblock %}

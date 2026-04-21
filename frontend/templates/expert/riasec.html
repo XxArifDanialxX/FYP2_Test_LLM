@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+    .riasec-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .riasec-table th { background: linear-gradient(135deg, #FF9800 0%, #F44336 100%); color: white; padding: 15px; text-align: center; }
+    .riasec-table td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
+    .riasec-table tr:hover { background: #fff3e0; }
+    
+    .weight-input { 
+        width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; 
+        text-align: center; font-weight: bold; font-size: 1.1em;
+    }
+    
+    .btn-save { background: #28a745; color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    .btn-save:hover { background: #218838; }
+    .btn-reset { background: #dc3545; color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px; }
+    
+    .trait-header { font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .message-alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; display: none; text-align: center; background: #d4edda; color: #155724; }
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header" style="text-align: center; margin-bottom: 30px;">
+            <h1><i class="fas fa-brain"></i> RIASEC Configuration</h1>
+            <p>Define the importance of each personality trait (0-10) for each specialization.</p>
+            <a href="{{ url_for('expert_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+
+        <div id="messageArea"></div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <form id="riasecForm" method="POST" style="display:inline;">
+                <input type="hidden" name="riasec_json" id="hiddenJSON">
+                <button type="button" class="btn-save" onclick="saveToServer()">
+                    <i class="fas fa-save"></i> Save Configuration
+                </button>
+            </form>
+            <button class="btn-reset" onclick="resetToDefault()">
+                <i class="fas fa-undo"></i> Reset Defaults
+            </button>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table class="riasec-table">
+                <thead>
+                    <tr>
+                        <th style="text-align:left; padding-left:20px;">Specialization</th>
+                        <th class="trait-header" title="Realistic">R</th>
+                        <th class="trait-header" title="Investigative">I</th>
+                        <th class="trait-header" title="Artistic">A</th>
+                        <th class="trait-header" title="Social">S</th>
+                        <th class="trait-header" title="Enterprising">E</th>
+                        <th class="trait-header" title="Conventional">C</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- JS will populate this -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em; color: #666;">
+            <strong>Guide:</strong>
+            <ul style="margin-top: 5px; margin-bottom: 0;">
+                <li><strong>10:</strong> Critical trait for this field.</li>
+                <li><strong>5:</strong> Moderate importance.</li>
+                <li><strong>0:</strong> Irrelevant trait.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    const DEFAULT_RIASEC = {
+        'ADE': {'R': 5, 'I': 3, 'A': 10, 'S': 5, 'E': 3, 'C': 3},
+        'AI': {'R': 3, 'I': 10, 'A': 5, 'S': 3, 'E': 0, 'C': 0},
+        'SDS': {'R': 5, 'I': 10, 'A': 0, 'S': 0, 'E': 3, 'C': 5},
+        'DE': {'R': 3, 'I': 5, 'A': 0, 'S': 0, 'E': 3, 'C': 10},
+        'NDC': {'R': 10, 'I': 3, 'A': 0, 'S': 0, 'E': 3, 'C': 5}
+    };
+
+    let riasecData = {{ data.riasec_weights | default({}) | tojson }};
+    if (Object.keys(riasecData).length === 0) riasecData = JSON.parse(JSON.stringify(DEFAULT_RIASEC));
+
+    const SPECS = ['ADE', 'AI', 'SDS', 'DE', 'NDC'];
+    const TRAITS = ['R', 'I', 'A', 'S', 'E', 'C'];
+    const SPEC_NAMES = {
+        'ADE': 'Application Development',
+        'AI': 'Artificial Intelligence',
+        'SDS': 'Security Systems',
+        'DE': 'Data Engineering',
+        'NDC': 'Network Comm.'
+    };
+
+    document.addEventListener('DOMContentLoaded', renderTable);
+
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        let html = '';
+        SPECS.forEach(spec => {
+            html += `<tr>
+                <td style="text-align:left; font-weight:bold; color:#333; padding-left:20px;">
+                    ${SPEC_NAMES[spec]} <span style="color:#999; font-size:0.8em;">(${spec})</span>
+                </td>`;
+            TRAITS.forEach(trait => {
+                let val = 0;
+                if (riasecData[spec] && riasecData[spec][trait] !== undefined) {
+                    val = riasecData[spec][trait];
+                }
+                html += `<td>
+                    <input type="number" class="weight-input" 
+                           value="${val}" min="0" max="10"
+                           onchange="updateValue('${spec}', '${trait}', this.value)">
+                </td>`;
+            });
+            html += `</tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    function updateValue(spec, trait, value) {
+        let val = parseInt(value);
+        if (isNaN(val) || val < 0 || val > 10) {
+            alert("Weight must be between 0 and 10");
+            renderTable();
+            return;
+        }
+        if (!riasecData[spec]) riasecData[spec] = {};
+        riasecData[spec][trait] = val;
+    }
+
+    function saveToServer() {
+        document.getElementById('hiddenJSON').value = JSON.stringify(riasecData);
+        document.getElementById('riasecForm').submit();
+    }
+
+    function resetToDefault() {
+        if(confirm("Reset RIASEC weights to defaults?")) {
+            riasecData = JSON.parse(JSON.stringify(DEFAULT_RIASEC));
+            renderTable();
+            showMessage("Reset! Click Save to apply.");
+        }
+    }
+
+    function showMessage(msg) {
+        const area = document.getElementById('messageArea');
+        area.innerHTML = msg;
+        area.style.display = 'block';
+        setTimeout(() => { area.style.display = 'none'; }, 3000);
+    }
+</script>
+{% endblock %}
