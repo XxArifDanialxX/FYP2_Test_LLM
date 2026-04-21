@@ -1,17 +1,16 @@
-print("--- FRONTEND STARTING ---")
-from flask import Flask, render_template, request, redirect, url_for, session
+import os
 import requests
 import json
-import os
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
-app.secret_key = 'frontend_secret_key'
+app.secret_key = 'fyp_secret_key'
 
-# Point this to your Backend API
-# This tells the code: "Use the Internet URL if available, otherwise use my laptop URL"
+# Point this to your Backend API (Port 5001)
 API_BASE_URL = os.getenv("API_URL", "http://127.0.0.1:5001")
 
-CRITERIA_KEYS = ["spm_results", "previous_semester", "technical_skills", "aptitude_test"]
+# ==================== DATA CONSTANTS ====================
+
 CRITERIA_LABELS = {
     "spm_results": "SPM Results", 
     "previous_semester": "Previous Semester", 
@@ -19,13 +18,7 @@ CRITERIA_LABELS = {
     "aptitude_test": "Aptitude Test"
 }
 
-SPECIALIZATION_NAMES = {
-    'ADE': 'APPLICATION DEVELOPMENT ENGINEERING',
-    'AI': 'ARTIFICIAL INTELLIGENCE',
-    'SDS': 'SECURITY IN DIGITAL SYSTEM',
-    'DE': 'DATA ENGINEERING',
-    'NDC': 'NETWORK AND DATA COMMUNICATIONS'
-}
+CRITERIA_KEYS = ["spm_results", "previous_semester", "technical_skills", "aptitude_test"]
 
 SPECIALIZATION_INFO = {
     "APPLICATION DEVELOPMENT ENGINEERING": {
@@ -95,8 +88,8 @@ def expert_dashboard():
         data = requests.get(f"{API_BASE_URL}/api/get_data").json()
         weights = requests.get(f"{API_BASE_URL}/api/calculate_weights").json()
         return render_template('expert/dashboard.html', data=data, weights=weights)
-    except Exception as e:
-        return f"Error: Backend API not reachable. Make sure api.py is running on port 5001. Details: {e}"
+    except:
+        return "Error: Backend API (api.py) is not running on Port 5001."
 
 @app.route('/expert/criteria', methods=['GET', 'POST'])
 def expert_criteria():
@@ -125,11 +118,7 @@ def expert_qrof():
             row = []
             for j in range(4):
                 val_str = request.form.get(f'cell_{i}_{j}')
-                if '/' in val_str:
-                    n, d = map(float, val_str.split('/'))
-                    row.append(n/d)
-                else:
-                    row.append(float(val_str))
+                row.append(eval(val_str) if '/' in val_str else float(val_str))
             matrix.append(row)
         data['mcdm']['qrof']['matrix'] = matrix
         requests.post(f"{API_BASE_URL}/api/save_data", json=data)
@@ -146,14 +135,15 @@ def expert_bwm_1():
 
 @app.route('/expert/bwm_2', methods=['GET', 'POST'])
 def expert_bwm_2():
-    best = session.get('bwm_best')
-    worst = session.get('bwm_worst')
+    best, worst = session.get('bwm_best'), session.get('bwm_worst')
     if not best: return redirect(url_for('expert_bwm_1'))
     if request.method == 'POST':
-        best_vec = [float(request.form.get(f'best_to_{k}')) for k in CRITERIA_KEYS]
-        worst_vec = [float(request.form.get(f'{k}_to_worst')) for k in CRITERIA_KEYS]
         data = requests.get(f"{API_BASE_URL}/api/get_data").json()
-        data['mcdm']['bwm'] = {"best_criteria": best, "worst_criteria": worst, "best_vectors": best_vec, "worst_vectors": worst_vec}
+        data['mcdm']['bwm'] = {
+            "best_criteria": best, "worst_criteria": worst,
+            "best_vectors": [float(request.form.get(f'best_to_{k}')) for k in CRITERIA_KEYS],
+            "worst_vectors": [float(request.form.get(f'{k}_to_worst')) for k in CRITERIA_KEYS]
+        }
         requests.post(f"{API_BASE_URL}/api/save_data", json=data)
         return redirect(url_for('expert_dashboard'))
     return render_template('expert/bwm_step2.html', best=best, worst=worst, keys=CRITERIA_KEYS, labels=CRITERIA_LABELS)
@@ -161,10 +151,7 @@ def expert_bwm_2():
 @app.route('/expert/swara_1', methods=['GET', 'POST'])
 def expert_swara_1():
     if request.method == 'POST':
-        ranks = []
-        for k in CRITERIA_KEYS:
-            ranks.append((k, int(request.form.get(f'rank_{k}'))))
-        ranks.sort(key=lambda x: x[1])
+        ranks = sorted([(k, int(request.form.get(f'rank_{k}'))) for k in CRITERIA_KEYS], key=lambda x: x[1])
         session['swara_sorted_criteria'] = [x[0] for x in ranks]
         return redirect(url_for('expert_swara_2'))
     return render_template('expert/swara_step1.html', criteria=CRITERIA_LABELS)
@@ -174,12 +161,11 @@ def expert_swara_2():
     sorted_keys = session.get('swara_sorted_criteria')
     if not sorted_keys: return redirect(url_for('expert_swara_1'))
     if request.method == 'POST':
-        comps = []
-        for i in range(1, 4):
-            val = float(request.form.get(f'sj_{sorted_keys[i]}', 0.1))
-            comps.append(val)
         data = requests.get(f"{API_BASE_URL}/api/get_data").json()
-        data['mcdm']['swara'] = {"rank_order": sorted_keys, "comparative_scores": comps}
+        data['mcdm']['swara'] = {
+            "rank_order": sorted_keys,
+            "comparative_scores": [float(request.form.get(f'sj_{sorted_keys[i]}', 0.1)) for i in range(1, 4)]
+        }
         requests.post(f"{API_BASE_URL}/api/save_data", json=data)
         return redirect(url_for('expert_dashboard'))
     return render_template('expert/swara_step2.html', sorted_keys=sorted_keys, labels=CRITERIA_LABELS)
@@ -187,7 +173,8 @@ def expert_swara_2():
 # ==================== STUDENT ROUTES ====================
 
 @app.route('/')
-def index(): return render_template('index.html')
+def index(): 
+    return render_template('index.html')
 
 @app.route('/student/info', methods=['GET', 'POST'])
 def student_info():
@@ -236,39 +223,44 @@ def student_riasec():
 @app.route('/student/results')
 def student_results():
     if 'student_info' not in session: return redirect(url_for('index'))
+    
     payload = {
         "student_scores": {
-            "spm": session['spm_scores'],
-            "uni": session['uni_scores'],
-            "skills": session['skills_scores'],
-            "riasec": session['riasec_scores']
+            "spm": session['spm_scores'], "uni": session['uni_scores'], 
+            "skills": session['skills_scores'], "riasec": session['riasec_scores']
         }
     }
-    # Call the Backend API for calculations
-    method_results = requests.post(f"{API_BASE_URL}/api/process_recommendation", json=payload).json()
+    # Call Backend API
+    resp = requests.post(f"{API_BASE_URL}/api/process_recommendation", json=payload).json()
     
-    spec_names = list(SPECIALIZATION_NAMES.values())
+    method_results = resp['method_results']
+    spec_names = ['APPLICATION DEVELOPMENT ENGINEERING', 'ARTIFICIAL INTELLIGENCE', 'SECURITY IN DIGITAL SYSTEM', 'DATA ENGINEERING', 'NETWORK AND DATA COMMUNICATIONS']
+    
+    # Simple Consensus (Average Ranks)
     tracker = {name: {'r':0, 's':0} for name in spec_names}
     for m in method_results:
         for item in method_results[m]:
             tracker[item['spec']]['r'] += item['rank']
             tracker[item['spec']]['s'] += item['score']
     
-    consensus = [{'spec': k, 'avg_rank': v['r']/4, 'avg_score': v['s']/4} for k,v in tracker.items()]
+    consensus = [{'spec': k, 'avg_rank': v['r']/len(method_results), 'avg_score': v['s']/len(method_results)} for k,v in tracker.items()]
     consensus.sort(key=lambda x: x['avg_rank'])
     for i, c in enumerate(consensus, 1): c['rank'] = i
     
-    top = consensus[0]['spec']
-    info = SPECIALIZATION_INFO.get(top, {'subjects':[], 'careers':[]})
-    weak = [k for k,v in session['skills_scores'].items() if v < 6]
+    top_spec_name = consensus[0]['spec']
+    top_spec_info = SPECIALIZATION_INFO.get(top_spec_name, {"subjects":[], "careers":[]})
+    weak_skills = [k for k,v in session['skills_scores'].items() if v < 6]
 
     return render_template('student/results.html', 
                            student=session['student_info'],
                            consensus=consensus, 
                            method_results=method_results,
-                           top_spec_name=top, top_spec_info=info,
-                           weak_skills=weak, methods=method_results.keys())
+                           agent_reasoning=resp['agent_reasoning'],
+                           career_roadmap=resp['career_roadmap'],
+                           top_spec_name=top_spec_name,
+                           top_spec_info=top_spec_info,
+                           weak_skills=weak_skills,
+                           methods=method_results.keys())
 
 if __name__ == '__main__':
-    print("--- DETECTED MAIN - RUNNING ON PORT 5000 ---")
     app.run(port=5000, debug=True)
