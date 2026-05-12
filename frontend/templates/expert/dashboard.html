@@ -167,6 +167,36 @@
         h2 {margin: 0; margin-bottom: 50px; color: #38332c;}
         h4 {margin: 0;}
 
+        .btn-animation {
+            position: relative;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 5px;
+            cursor: pointer;
+            overflow: hidden; 
+            z-index: 1;
+            transition: color 150ms ease-in-out;
+        }
+
+        .btn-animation::after {
+            content: '';
+            background: linear-gradient(to right, #ffee00, #ffb300);
+            height: 100%;
+            width: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            transition: width 150ms ease-in-out;
+        }
+
+        .btn-animation:hover {
+            color: black;
+        }
+
+        .btn-animation:hover::after {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -215,14 +245,14 @@
                 <div class="small-box criteria">
                     <h3><span><i class="fas fa-list-ul"></i> Criteria Management</span></h3>
                     <p style="font-size: 0.85em; font-family: 'Montserrat';">Define subjects, courses, and skills.</p>
-                    <a href="{{ url_for('expert_criteria') }}" class="btn btn-save" style="background:#264653; font-size: 0.8em; padding: 8px 15px; font-family: 'Montserrat';">Manage</a>
+                    <a href="{{ url_for('expert_criteria') }}" class="btn btn-save btn-animation" style=" background: #264653; font-size: 0.8em; padding: 8px 15px; font-family: 'Montserrat';" >Manage</a>
                 </div>
                 
                 <!-- RIASEC Configuration -->
                 <div class="small-box riasec">
                     <h3><span><i class="fas fa-brain"></i> RIASEC Configuration</span></h3>
                     <p style="font-size: 0.85em; font-family: 'Montserrat';">Personality trait influence per spec.</p>
-                    <a href="{{ url_for('expert_riasec') }}" class="btn btn-save" style="background:#D34E4E; font-size: 0.8em; padding: 8px 15px; font-family: 'Montserrat';">Configure</a>
+                    <a href="{{ url_for('expert_riasec') }}" class="btn btn-save btn-animation" style="background:#D34E4E; font-size: 0.8em; padding: 8px 15px; font-family: 'Montserrat';">Configure</a>
                 </div>
             </div>
         </div>
@@ -239,7 +269,7 @@
                     <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">Skills</div><div class="weight-val">{{ "%.3f"|format(weights['qrof'][2]) if weights['qrof'] else "0.25" }}</div></div>
                     <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">Aptitude</div><div class="weight-val">{{ "%.3f"|format(weights['qrof'][3]) if weights['qrof'] else "0.25" }}</div></div>
                 </div>
-                <a href="{{ url_for('expert_qrof') }}" class="btn btn-save" style="background:#6984A9; width:93%; padding:5px; font-size:0.8em; font-family: 'Montserrat';">Configure</a>
+                <a href="{{ url_for('expert_qrof') }}" class="btn btn-save btn-animation" style="background:#6984A9; width:93%; padding:5px; font-size:0.8em; font-family: 'Montserrat';">Configure</a>
             </div>
 
             <!-- BWM -->
@@ -251,7 +281,7 @@
                     <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">Skills</div><div class="weight-val">{{ "%.3f"|format(weights['bwm'][2]) if weights['bwm'] else "0.25" }}</div></div>
                     <div class="weight-box"><div class="weight-label" style="font-family: 'Montserrat';">Aptitude</div><div class="weight-val">{{ "%.3f"|format(weights['bwm'][3]) if weights['bwm'] else "0.25" }}</div></div>
                 </div>
-                <a href="{{ url_for('expert_bwm_1') }}" class="btn btn-save" style="background:#2a9d8f; width:93%; padding:5px; font-size:0.8em; font-family: 'Montserrat';">Configure</a>
+                <a href="{{ url_for('expert_bwm_1') }}" class="btn btn-save btn-animation" style="background:#2a9d8f; width:93%; padding:5px; font-size:0.8em; font-family: 'Montserrat';">Configure</a>
             </div>
 
             <!-- SWARA + MOORA -->
@@ -288,7 +318,7 @@
                     </div>
                 </div>
                 
-                <a href="{{ url_for('expert_swara_1') }}" class="btn btn-save" style="background:#FF9800; width:93%; padding:5px; font-size:0.8em; margin-top: 10px; font-family: 'Montserrat';">Configure</a>
+                <a href="{{ url_for('expert_swara_1') }}" class="btn btn-save btn-animation" style="background:#FF9800; width:93%; padding:5px; font-size:0.8em; margin-top: 10px; font-family: 'Montserrat';">Configure</a>
             </div>
             <!-- CRITIC -->
             <div class="method-card ltsf">

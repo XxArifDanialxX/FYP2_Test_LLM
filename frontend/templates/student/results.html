@@ -5,62 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Specialization Recommendation Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f4f7f6; 
+            margin: 0; 
+            padding: 20px; 
+            color: #2c3e50;
+        }
         .results-container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
         /* Agent A: Orchestrator Style */
         .agent-a-box {
-            background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+            background: linear-gradient(135deg, #fff9c4 0%, #fffde7 100%);
             border-left: 8px solid #fbc02d;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 10px;
         }
+        .agent-a-box h3 { color: #827717; margin-top: 0; font-size: 1.2em; display: flex; align-items: center; gap: 10px; }
 
-        /* Top Recommendation Style */
+        /* Top Recommendation Hero */
         .top-recommendation {
             background: linear-gradient(135deg, #5a189a 0%, #f20089 100%);
             color: white;
-            padding: 40px;
-            border-radius: 15px;
+            padding: 50px 30px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(242, 0, 137, 0.3);
+            box-shadow: 0 10px 30px rgba(242, 0, 137, 0.2);
         }
-        .top-recommendation h2 { font-size: 2.5em; margin: 10px 0; }
-        .top-recommendation .score { font-size: 4em; font-weight: 800; margin: 20px 0; }
+        .top-recommendation h2 { font-size: 2.8em; margin: 10px 0; font-weight: 800; text-transform: uppercase; }
+        .top-recommendation .score { font-size: 4.5em; font-weight: 900; margin: 15px 0; }
 
-        /* Tables & Rankings */
+        /* Ranking Tables */
         .ranking-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .ranking-table th { background: #f8f9fa; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #eee; }
-        .ranking-table td { padding: 15px; border-bottom: 1px solid #eee; }
-        .rank-badge { display: inline-block; width: 30px; height: 30px; border-radius: 50%; text-align: center; line-height: 30px; font-weight: bold; color: white; }
-        .rank-1 { background: #FFD700; color: #333; }
+        .ranking-table td { padding: 18px 15px; border-bottom: 1px solid #eee; }
+        .rank-badge { display: inline-block; width: 35px; height: 35px; border-radius: 50%; text-align: center; line-height: 35px; font-weight: bold; color: white; }
+        .rank-1 { background: #FFD700; color: #333; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
         .rank-2 { background: #C0C0C0; color: #333; }
-        .rank-3 { background: #CD7F32; color: #white; }
+        .rank-3 { background: #CD7F32; color: white; }
         
-        /* Progress Bars */
-        .score-bar { height: 12px; background: #e9ecef; border-radius: 10px; overflow: hidden; margin-top: 5px; }
-        .score-fill { height: 100%; transition: width 1s ease-in-out; }
+        .score-bar { height: 10px; background: #e9ecef; border-radius: 10px; overflow: hidden; margin-top: 8px; width: 100%; }
+        .score-fill { height: 100%; transition: width 1.5s ease-in-out; }
 
-        /* Agent B: Excellence Roadmap Style */
-        .agent-b-section {
-            background: #ffffff;
-            border-top: 6px solid #5a189a;
-            padding: 30px;
-            border-radius: 15px;
-        }
-        .roadmap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .roadmap-card { background: #f8f1ff; padding: 20px; border-radius: 10px; border: 1px solid #e0cffc; }
-        .roadmap-card h4 { color: #5a189a; margin-top: 0; display: flex; align-items: center; gap: 10px; }
-
-        /* General UI Helpers */
-        .badge-purple { background: #eddaff; color: #5a189a; padding: 5px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600; }
-        .skill-badge { display: inline-block; background: #fff3cd; color: #856404; padding: 6px 12px; border-radius: 20px; margin: 4px; font-size: 0.9em; border: 1px solid #ffeeba; }
-        .print-btn { background: #2196F3; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 1em; }
+        /* Agent B: Excellence Roadmap */
+        .agent-b-section { background: #ffffff; border-top: 8px solid #5a189a; padding: 35px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .roadmap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 25px; }
+        .roadmap-card { background: #fdfaff; padding: 25px; border-radius: 12px; border: 1px solid #eddaff; }
+        .roadmap-card h4 { color: #5a189a; margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 1.1em; }
         
+        .gap-banner { background: #5a189a; color: white; padding: 30px; border-radius: 15px; margin-top: 25px; position: relative; overflow: hidden; }
+        .gap-banner::after { content: '\f185'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; right: -20px; bottom: -20px; font-size: 8em; opacity: 0.1; }
+
+        /* Badges */
+        .skill-badge { display: inline-block; background: #fff3e0; color: #e65100; padding: 6px 15px; border-radius: 30px; margin: 4px; font-size: 0.9em; font-weight: 600; border: 1px solid #ffe0b2; }
+        .cert-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 8px 18px; border-radius: 8px; margin-bottom: 10px; font-weight: 600; width: 100%; box-sizing: border-box; }
+
+        .btn-action { display: inline-block; padding: 15px 35px; border-radius: 10px; font-weight: 700; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; }
+        .btn-home { background: #6c757d; color: white; }
+        .btn-print { background: #2196F3; color: white; margin-left: 15px; }
+
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
@@ -68,39 +79,40 @@
 
     <div class="results-container">
         
-        <!-- Header -->
-        <div class="card no-print" style="text-align: center;">
-            <h1><i class="fas fa-chart-line"></i> Academic Specialization Report</h1>
-            <p>Generated for: <strong>{{ student.name }}</strong> ({{ student.matric }})</p>
+        <!-- Header Info -->
+        <div class="card no-print" style="text-align: center; border-bottom: 4px solid #f20089;">
+            <h1 style="margin-bottom: 5px;">Academic Career Report</h1>
+            <p style="font-size: 1.1em; color: #666;">Prepared for <strong>{{ student.name }}</strong> | Matric: <strong>{{ student.matric }}</strong></p>
         </div>
 
-        <!-- AGENT A: ORCHESTRATOR REASONING -->
+        <!-- AGENT A: REASONING -->
         <div class="agent-a-box">
-            <h3><i class="fas fa-robot"></i> Agentic Orchestrator Insights</h3>
-            <p><i>"{{ agent_reasoning }}"</i></p>
+            <h3><i class="fas fa-robot"></i> Agentic Orchestrator Analysis</h3>
+            <p style="line-height: 1.6; font-size: 1.05em;"><i>"{{ agent_reasoning }}"</i></p>
         </div>
 
-        <!-- Top Recommendation Hero -->
+        <!-- HERO SECTION -->
         <div class="top-recommendation">
-            <p style="text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Best Fit Specialization</p>
+            <p style="text-transform: uppercase; letter-spacing: 3px; font-weight: 600; opacity: 0.9;">Recommended Specialization</p>
             <h2>{{ top_spec_name }}</h2>
-            <div class="score">{{ "%.1f"|format(consensus[0].avg_score) }}%</div>
-            <div style="display: inline-block; padding: 8px 25px; background: rgba(255,255,255,0.2); border-radius: 30px;">
-                Consensus Rank #1 across all MCDM engines
+            <div class="score">{{ "%.1f"|format(consensus[0].score) }}%</div>
+            <div style="background: rgba(255,255,255,0.15); display: inline-block; padding: 10px 30px; border-radius: 50px; font-weight: 600;">
+                Calculated via AI-Weighted Multi-Criteria Consensus
             </div>
         </div>
 
-        <!-- Consensus Results Table -->
+        <!-- CONSENSUS TABLE -->
         <div class="card">
-            <h3><i class="fas fa-users-cog"></i> Algorithm Consensus (Overall Ranking)</h3>
-            <p style="color: #666;">This ranking combines q-ROF-AHP, BWM, SWARA, and CRITIC algorithms.</p>
+            <h3><i class="fas fa-layer-group"></i> Consolidated Ranking Results</h3>
+            <p style="color: #7f8c8d; margin-top: -10px;">Aggregated scores from q-ROF-AHP, BWM, SWARA, and CRITIC engines.</p>
+            
             <table class="ranking-table">
                 <thead>
                     <tr>
                         <th width="80">Rank</th>
-                        <th>Specialization Path</th>
-                        <th width="150">Aggregate Score</th>
-                        <th width="250">Relative Performance</th>
+                        <th>Pathway</th>
+                        <th width="120">Match %</th>
+                        <th width="280">Visual Strength</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -108,13 +120,14 @@
                     <tr>
                         <td><div class="rank-badge rank-{{ item.rank }}">{{ item.rank }}</div></td>
                         <td>
-                            <strong>{{ item.spec }}</strong>
-                            {% if loop.first %}<span class="badge-purple" style="margin-left:10px;">RECOMMENDED</span>{% endif %}
+                            <span style="font-weight: 800; font-size: 1.1em;">{{ item.spec }}</span>
+                            {% if loop.first %}<br><small style="color: #f20089; font-weight: bold;">PRIMARY RECOMMENDATION</small>{% endif %}
                         </td>
-                        <td><strong>{{ "%.1f"|format(item.avg_score) }}%</strong></td>
+                        <td><strong style="font-size: 1.2em;">{{ item.score }}%</strong></td>
                         <td>
                             <div class="score-bar">
-                                <div class="score-fill" style="width: {{ item.avg_score }}%; background: {{ '#f20089' if loop.first else '#5a189a' }}"></div>
+                                {% set color = '#f20089' if loop.first else '#5a189a' %}
+                                <div class="score-fill" style="width: {{ item.score }}%; background: {{ color }};"></div>
                             </div>
                         </td>
                     </tr>
@@ -123,18 +136,18 @@
             </table>
         </div>
 
-        <!-- Individual MCDM Method Breakdowns -->
+        <!-- INDIVIDUAL ENGINES -->
         <div class="card no-print">
-            <h3><i class="fas fa-microchip"></i> Detailed Algorithm Analysis</h3>
+            <h3><i class="fas fa-calculator"></i> Individual Engine Perspectives</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
-                {% for method_name in methods %}
-                <div style="background: #fcfcfc; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
-                    <h4 style="margin-top: 0; color: #5a189a;">{{ method_name }}</h4>
-                    <table style="width: 100%; font-size: 0.9em;">
-                        {% for row in method_results[method_name] %}
+                {% for method in methods %}
+                <div style="padding: 20px; border: 1px solid #eee; border-radius: 12px; background: #fafafa;">
+                    <h4 style="margin-top: 0; color: #5a189a; border-bottom: 2px solid #eddaff; padding-bottom: 10px;">{{ method }} Result</h4>
+                    <table style="width: 100%; font-size: 0.9em; border-spacing: 0 8px; border-collapse: separate;">
+                        {% for row in method_results[method] %}
                         <tr>
                             <td width="30">#{{ row.rank }}</td>
-                            <td>{{ row.spec }}</td>
+                            <td style="font-weight: 600;">{{ row.spec[:30] }}...</td>
                             <td align="right"><strong>{{ row.score }}%</strong></td>
                         </tr>
                         {% endfor %}
@@ -144,57 +157,26 @@
             </div>
         </div>
 
-        <!-- Static Focus Areas Section -->
-        <div class="card">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                <!-- Left: Core Subjects -->
-                <div>
-                    <h3 style="color: #2196F3;"><i class="fas fa-book"></i> Core Subjects to Master</h3>
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                        {% for subj in top_spec_info.subjects %}
-                        <div style="background: #f1f8ff; padding: 12px; border-radius: 8px; border-left: 4px solid #2196F3; display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-check-circle" style="color: #28a745;"></i> {{ subj }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- Right: Weak Skills -->
-                <div>
-                    <h3 style="color: #FF9800;"><i class="fas fa-tools"></i> Skills to Improve</h3>
-                    <div style="background: #fffef0; padding: 20px; border-radius: 10px; border: 1px solid #ffeeba; margin-top: 15px;">
-                        <p style="font-size: 0.9em; color: #856404; margin-top: 0;">
-                            <i class="fas fa-exclamation-triangle"></i> Based on your self-assessment, focus on these:
-                        </p>
-                        <div style="margin-top: 10px;">
-                            {% for skill in weak_skills %}
-                            <span class="skill-badge">{{ skill.replace('_', ' ') }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- AGENT B: EXCELLENCE ROADMAP (DYNAMIC AI CONTENT) -->
+        <!-- DYNAMIC AGENT B SECTION -->
         <div class="agent-b-section">
-            <h2 style="color: #5a189a; margin-top: 0;"><i class="fas fa-graduation-cap"></i> Agentic AI: Excellence Roadmap</h2>
-            <p style="color: #666;">This roadmap is generated by scanning live 2024/2025 industry trends in Malaysia for <strong>{{ top_spec_name }}</strong>.</p>
+            <h2 style="color: #5a189a; margin-top: 0; display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-graduation-cap"></i> Agentic AI: Excellence Roadmap
+            </h2>
+            <p style="color: #666; font-size: 1.1em;">Analyzing live 2026 industry trends in Malaysia for <strong>{{ top_spec_name }}</strong>...</p>
 
             <div class="roadmap-grid">
-                <!-- Pillar 1 -->
+                <!-- Pillars -->
                 <div class="roadmap-card">
-                    <h4><i class="fas fa-brain"></i> Advanced Knowledge</h4>
-                    <ul style="padding-left: 20px; font-size: 0.95em;">
+                    <h4><i class="fas fa-brain"></i> Foundational Knowledge</h4>
+                    <ul style="padding-left: 20px; line-height: 1.8;">
                         {% for item in career_roadmap.core_knowledge %}
                         <li>{{ item }}</li>
                         {% endfor %}
                     </ul>
                 </div>
-                <!-- Pillar 2 -->
                 <div class="roadmap-card">
-                    <h4><i class="fas fa-code"></i> Modern Tech Stack</h4>
-                    <ul style="padding-left: 20px; font-size: 0.95em;">
+                    <h4><i class="fas fa-code"></i> Technical Stack to Master</h4>
+                    <ul style="padding-left: 20px; line-height: 1.8;">
                         {% for item in career_roadmap.technical_skills %}
                         <li>{{ item }}</li>
                         {% endfor %}
@@ -202,54 +184,59 @@
                 </div>
             </div>
 
-            <!-- Gap Bridging Advice -->
-            <div style="background: #5a189a; color: white; padding: 25px; border-radius: 12px; margin-top: 20px;">
-                <h4 style="margin-top: 0;"><i class="fas fa-bridge"></i> Bridging Your Skill Gaps</h4>
-                <p style="font-size: 1em; line-height: 1.6; opacity: 0.9;">{{ career_roadmap.gap_bridging }}</p>
+            <!-- Gap Bridging -->
+            <div class="gap-banner">
+                <h4 style="margin-top: 0; font-size: 1.3em;"><i class="fas fa-bridge"></i> Bridging Your Skill Gaps</h4>
+                <p style="font-size: 1.1em; line-height: 1.7; opacity: 0.95;">{{ career_roadmap.gap_bridging }}</p>
             </div>
 
             <div class="roadmap-grid">
-                <!-- Certifications -->
-                <div class="roadmap-card" style="background: #e8f5e9; border-color: #a5d6a7;">
-                    <h4 style="color: #2e7d32;"><i class="fas fa-certificate"></i> Recommended Certifications</h4>
+                <!-- Certs -->
+                <div class="roadmap-card" style="background: #f1f8ff; border-color: #bbdefb;">
+                    <h4 style="color: #0d47a1;"><i class="fas fa-certificate"></i> Target Certifications</h4>
                     {% for cert in career_roadmap.certifications %}
-                    <span class="badge-purple" style="background: #2e7d32; color: white; margin-bottom: 5px; display: inline-block;">{{ cert }}</span>
+                    <div class="cert-badge">{{ cert }}</div>
                     {% endfor %}
                 </div>
-                <!-- Project Idea -->
-                <div class="roadmap-card" style="background: #fff3e0; border-color: #ffe0b2;">
-                    <h4 style="color: #e65100;"><i class="fas fa-laptop-code"></i> AI-Suggested Portfolio Project</h4>
-                    <p style="font-size: 0.95em; color: #333;">{{ career_roadmap.project_idea }}</p>
+                <!-- Project -->
+                <div class="roadmap-card" style="background: #fff8e1; border-color: #ffe082;">
+                    <h4 style="color: #f57f17;"><i class="fas fa-laptop-code"></i> Suggested Capstone Project</h4>
+                    <p style="font-size: 1.05em; line-height: 1.6; color: #444;">{{ career_roadmap.project_idea }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Static Careers Section -->
+        <!-- STATIC FOCUS AREAS (From Specialist Info) -->
         <div class="card">
-            <h3><i class="fas fa-briefcase"></i> Future Career Paths</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
-                {% for career in top_spec_info.careers %}
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #eee;">
-                    <h5 style="margin: 0 0 5px 0; color: #333;">{{ career.title }}</h5>
-                    <p style="color: #666; margin: 0; font-size: 0.85em;">{{ career.desc }}</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div>
+                    <h3 style="color: #2196F3;"><i class="fas fa-book"></i> Core Curriculum Subjects</h3>
+                    <div style="margin-top: 15px;">
+                        {% for subj in top_spec_info.subjects %}
+                        <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #2196F3;">
+                            <i class="fas fa-check-circle" style="color: #2e7d32; margin-right: 10px;"></i> {{ subj }}
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                {% endfor %}
+                <div>
+                    <h3 style="color: #FF9800;"><i class="fas fa-exclamation-circle"></i> Weak Areas to Strengthen</h3>
+                    <div style="margin-top: 15px;">
+                        {% for skill in weak_skills %}
+                        <span class="skill-badge">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Actions -->
-        <div class="no-print" style="text-align: center; margin-bottom: 40px;">
-            <a href="/" class="btn" style="background: #6c757d; text-decoration: none; padding: 12px 25px; color: white; border-radius: 8px;">Back to Home</a>
-            <button onclick="window.print()" class="print-btn" style="margin-left: 10px;"><i class="fas fa-print"></i> Save as PDF / Print</button>
+        <!-- ACTIONS -->
+        <div class="no-print" style="text-align: center; margin-bottom: 50px;">
+            <a href="/" class="btn-action btn-home">Return to Home</a>
+            <button onclick="window.print()" class="btn-action btn-print"><i class="fas fa-print"></i> Download as PDF Report</button>
         </div>
 
     </div>
 
-    <script>
-        // Trigger width animations on load
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("Results loaded successfully with Agentic AI components.");
-        });
-    </script>
 </body>
 </html>
