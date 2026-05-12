@@ -23,8 +23,8 @@ SPEC_NAMES = [
 ]
 
 # API Keys (Use Environment Variables on Render)
-GENAI_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCqeyYjlt23YToWXe36mZh1hWoe1ySCDcQ")
-TAVILY_KEY = os.getenv("TAVILY_API_KEY", "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")
+GENAI_KEY = os.getenv("GEMINI_API_KEY", "secret")
+TAVILY_KEY = os.getenv("TAVILY_API_KEY", "secret")
 
 client = genai.Client(api_key=GENAI_KEY)
 tavily = TavilyClient(api_key=TAVILY_KEY)
